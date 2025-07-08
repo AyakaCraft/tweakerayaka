@@ -1,0 +1,42 @@
+name: Build & Publish
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+env:
+  JAVA_VERSION: 21
+  BUILD_RELEASE: "true"
+  CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REPO: ${{ github.repository }}
+  REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  TAG: ${{ github.ref_name }}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build and Publish
+        run: ./gradlew clean buildAndGather publishAll sendDiscord --warning-mode all --stacktrace

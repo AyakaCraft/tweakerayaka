@@ -1,4 +1,4 @@
-# Fabric Mod Template
+# TweakerAyaka
 
 [简体中文](README_zh.md) ｜ English
 
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 ## Conclusion
 
-Description here
+A malilib mod for AyakaCraft
 
 Mostly based on [Fallen-Breath's template](https://github.com/Fallen-Breath/fabric-mod-template)
 
@@ -48,7 +48,6 @@ The following Minecraft versions are out of the support range. There's no suppor
 
 | Minecraft Version | Last Version                                                                      | Release Date |
 |-------------------|-----------------------------------------------------------------------------------|--------------|
-| 1.19.2            | [v0.3.1](https://github.com/AyakaCraft/Carpet-Ayaka-Addition/releases/tag/v0.3.1) | Mar 2, 2025  |
 
 ### Scheduled to be supported versions
 

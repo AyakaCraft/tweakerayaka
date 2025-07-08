@@ -3,23 +3,32 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "Description here",
+  "description": "A malilib mod for AyakaCraft",
   "authors": [
-    "Your name here"
+    "Calboot"
   ],
   "contact": {
-    "homepage": "https://github.com/",
-    "sources": "https://github.com/",
-    "issues": "https://github.com/"
+    "homepage": "https://github.com/AyakaCraft/tweakerayaka/",
+    "sources": "https://github.com/AyakaCraft/tweakerayaka/",
+    "issues": "https://github.com/AyakaCraft/tweakerayaka/issues/"
   },
   "license": "GPL-3.0",
-  "icon": "assets/modid/icon.png",
-  "environment": "*",
+  "icon": "assets/tweakerayaka/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.ayakacraft.tweakerayaka.TweakerAyakaMod"
+    ],
+    "modmenu": [
+      "com.ayakacraft.tweakerayaka.utils.ModMenuApiImpl"
+    ]
+  },
   "mixins": [
-    "modid.mixins.json"
+    "tweakerayaka.mixins.json"
   ],
   "depends": {
     "fabricloader": "${loader_dependency}",
-    "minecraft": "${minecraft_dependency}"
+    "minecraft": "${minecraft_dependency}",
+    "fabric": "*"
   }
 }

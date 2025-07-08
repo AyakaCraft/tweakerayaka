@@ -6,6 +6,7 @@ apply plugin: "com.replaymod.preprocess"
 apply plugin: "com.hypherionmc.modutils.modpublisher"
 apply plugin: "com.github.hierynomus.license"
 apply plugin: "maven-publish"
+apply plugin: "me.fallenbreath.yamlang"
 
 Map<String, ?> properties = project.getProperties()
 
@@ -45,14 +46,17 @@ repositories {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
 
 }
 
 // https://github.com/FabricMC/fabric-loader/issues/783
 configurations {
     modRuntimeOnly.exclude(group: "net.fabricmc", module: "fabric-loader")
-    modCompileOnly.exclude(group: "com.github.2No2Name", module: "McTester")
-    modImplementation.exclude(group: "com.github.2No2Name", module: "McTester")
+    modImplementation.exclude(group: "io.github.prospector", module: "modmenu")
 }
 
 dependencies {
@@ -62,7 +66,22 @@ dependencies {
 
     // fabric
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
-    // modImplementation("net.fabricmc:fabric-api:${project.fabric_api_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+
+    //libs
+    include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditionalmixin_version}"))
+
+    if (mcVersion >= 12101) {
+        modImplementation("com.github.sakura-ryoko:malilib:${project.malilib_version}")
+    } else {
+        modImplementation("fi.dy.masa.malilib:${project.malilib_version}")
+    }
+
+    if (mcVersion >= 11500) {
+        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    } else {
+        modImplementation("maven.modrinth:modmenu:${project.modmenu_version}")
+    }
 
     if (!releasing) {
         // Runtime only mods here
@@ -72,7 +91,8 @@ dependencies {
 
 }
 
-var MIXIN_CONFIG_PATH = "modid.mixins.json"
+var MIXIN_CONFIG_PATH = "tweakerayaka.mixins.json"
+var LANG_DIR = "assets/tweakerayaka/lang"
 var JAVA_COMPATIBILITY
 if (mcVersion >= 12005) {
     JAVA_COMPATIBILITY = JavaVersion.VERSION_21
@@ -94,7 +114,7 @@ loom {
     }
 
     runs {
-        var auditVmArgs = [*commonVmArgs, "-Dmodid.mixin_audit=true"]
+        var auditVmArgs = [*commonVmArgs, "-Dtweakerayaka.mixin_audit=true"]
         serverMixinAudit {
             server()
             vmArgs auditVmArgs
@@ -108,6 +128,16 @@ loom {
     }
 }
 
+preprocess {
+    patternAnnotation.set("com.ayakacraft.tweakerayaka.utils.preprocess.PreprocessPattern")
+}
+
+// https://github.com/Fallen-Breath/yamlang
+yamlang {
+    targetSourceSets = [sourceSets.main]
+    inputDir = LANG_DIR
+}
+
 shadowJar {
     configurations = [project.configurations.shadow]
     exclude("META-INF")
@@ -116,7 +146,7 @@ shadowJar {
 
 tasks.withType(ShadowJar).configureEach {
     enableRelocation = true
-    relocationPrefix = "modid.libs"
+    relocationPrefix = "tweakerayaka.libs"
 }
 
 remapJar {

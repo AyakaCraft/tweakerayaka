@@ -57,8 +57,8 @@ body:
   - type: input
     id: mod-version
     attributes:
-      label: ModName version
-      description: The ModName version(s) where this bug occurs in.
+      label: TweakerAyaka version
+      description: The TweakerAyaka version(s) where this bug occurs in.
       placeholder: 0.0.1
     validations:
       required: true
